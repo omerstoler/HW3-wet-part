@@ -2,7 +2,7 @@
 
 static inline game_params parse_input_args(int argc, char **argv);
 static inline void usage(const char* mes);
-static void calc_and_append_statistics(uint n_threads, const vector<float>& gen_hist, const vector<tile_record>& tile_hist);
+static void calc_and_append_statistics(uint n_threads, const vector<double>& gen_hist, const vector<tile_record>& tile_hist);
 
 /*--------------------------------------------------------------------------------
 										Main
@@ -52,7 +52,7 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 	double avg_gen_time = total_time / gen_hist.size();
 
 	double avg_tile_time = 0; 
-	for(uint i=0 ; i<tile_hist.size() ; ++i); 
+	for(uint i=0 ; i<tile_hist.size() ; ++i)
 		avg_tile_time += tile_hist[i].tile_compute_time;
 	avg_tile_time /= tile_hist.size();  
 	double gen_rate = gen_hist.size() / total_time;
