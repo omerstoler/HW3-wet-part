@@ -2,9 +2,9 @@
 #include "PCQueue.hpp"
 
 
-#define NUM_PUSHES 5
-#define NUM_THREADS 3
-#define NUM_POPS 3
+#define NUM_PUSHES 10000
+#define NUM_THREADS 31
+#define NUM_POPS 1
 
 
 void *PushPrint(void *given_q) {
@@ -12,7 +12,6 @@ void *PushPrint(void *given_q) {
   for (int i = 0; i < NUM_PUSHES; i++) {
     cout << "Current push: " << i << " , by thread: " << pthread_self() << endl;
     q->push(i);
-    sleep(4);
   }
   pthread_exit(NULL);
 }
@@ -37,7 +36,6 @@ int main () {
    int i;
 
    thread_error = pthread_create(&threads[0], NULL, PushPrint, (void *)&(pcq));
-
    if (thread_error) {
       cout << "Error:unable to create thread," << thread_error << endl;
       exit(-1);

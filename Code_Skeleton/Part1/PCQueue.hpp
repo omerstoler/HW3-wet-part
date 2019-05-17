@@ -8,7 +8,10 @@ template <typename T>class PCQueue
 
 public:
 	// default constructor
-	PCQueue() : queue_lock(1), available_items() {};
+	PCQueue() : available_items() {
+		pthread_mutex_init(&queue_lock);
+		pthread_cond_init(&push_allowed);
+	};
 
 	// Blocks while queue is empty. When queue holds items, allows for a single
 	// thread to enter and remove an item from the front of the queue and return it.
@@ -16,10 +19,14 @@ public:
 	T pop(){
 		T item;
 		available_items.down();
-	  queue_lock.down();
+	  pthread_mutex_lock(&queue_lock);
+
+		while(producers_waiting > 0)
+			pthread_cond_wait(&pop_prohibited,&queue_lock);
+
 	  item = q.front();
 	  q.pop();
-	  queue_lock.up();
+	  pthread_mutex_unlock(&queue_lock);
 	  return item;
 	};
 
@@ -27,10 +34,15 @@ public:
 	// Hint for *minimal delay* - Allow the consumers to delay the producer as little as possible.
 	// Assumes single producer
 	void push(const T& item){
-		queue_lock.down();
+
+		producers_waiting++; //==== safe only when single-producer
+
+		pthread_mutex_lock(&queue_lock);
 		q.push(item);
 		available_items.up();
-		queue_lock.up();
+
+		producers_waiting--;
+		pthread_mutex_unlock(&queue_lock);
 	};
 
 
@@ -39,7 +51,10 @@ private:
 	std::queue<T> q;
 	//Semaphore free_space;
 	Semaphore available_items;
-	Semaphore queue_lock;
+	pthread_mutex_t  queue_lock;
+
+	int producers_waiting;
+	pthread_cond_t pop_prohibited;
 };
 // Recommendation: Use the implementation of the std::queue for this exercise
 #endif
