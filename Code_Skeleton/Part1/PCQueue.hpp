@@ -8,9 +8,9 @@ template <typename T>class PCQueue
 
 public:
 	// default constructor
-	PCQueue() : available_items() {
-		pthread_mutex_init(&queue_lock);
-		pthread_cond_init(&push_allowed);
+	PCQueue() : available_items(), producers_waiting(0) {
+		pthread_mutex_init(&queue_lock, NULL);
+		pthread_cond_init(&pop_prohibited, NULL);
 	};
 
 	// Blocks while queue is empty. When queue holds items, allows for a single
@@ -22,7 +22,7 @@ public:
 	  pthread_mutex_lock(&queue_lock);
 
 		while(producers_waiting > 0)
-			pthread_cond_wait(&pop_prohibited,&queue_lock);
+			pthread_cond_wait(&pop_prohibited, &queue_lock);
 
 	  item = q.front();
 	  q.pop();
@@ -42,6 +42,7 @@ public:
 		available_items.up();
 
 		producers_waiting--;
+		pthread_cond_broadcast(&pop_prohibited);
 		pthread_mutex_unlock(&queue_lock);
 	};
 
