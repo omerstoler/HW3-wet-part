@@ -1,4 +1,4 @@
-#include "Semaphore.hpp"
+//#include "Semaphore.hpp"
 #include "PCQueue.hpp"
 
 
@@ -23,7 +23,7 @@ void *PopPrint(void *given_q) {
    int head;
    for (int i = 0; i < NUM_POPS; i++) {
      head = q->pop();
-     cout << "Current head: " << head << " , by thread: " << pthread_self() << endl;
+     cout << "Current pop: " << head << " , by thread: " << pthread_self() << endl;
    }
 
    pthread_exit(NULL);

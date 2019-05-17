@@ -15,11 +15,12 @@ public:
 	// Assumes multiple consumers.
 	T pop(){
 		T item;
-		queue_lock.down();
 		available_items.down();
-		item = q.pop();
-		queue_lock.up();
-		return item;
+	  queue_lock.down();
+	  item = q.front();
+	  q.pop();
+	  queue_lock.up();
+	  return item;
 	};
 
 	// Allows for producer to enter with *minimal delay* and push items to back of the queue.
