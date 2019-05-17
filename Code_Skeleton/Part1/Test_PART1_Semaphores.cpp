@@ -6,9 +6,17 @@
 
 int x = 0;
 
-void *PrintHello(void *threadid, void *sem) {
+typedef struct params{
+  long i;
+  Semaphore* sem;
+} params_t;
+
+void *PrintHello(void *params) {
    long tid;
-   tid = (long)threadid;
+   params_t *local_params;
+   local_params = (params_t*)params;
+
+   tid = (long)(local_params->i);
    printf("Hello World! Thread ID, %d\n", tid);
    x++;
    printf("x = %d\n", x);
@@ -17,15 +25,20 @@ void *PrintHello(void *threadid, void *sem) {
 
 int main () {
    Semaphore sem(SEM_COUNT_INIT);
+   params_t params;
 
    pthread_t threads[NUM_THREADS];
    int thread_error;
    int i;
    //Semaphore smp(1); // binary semaphore testing
 
+   params.sem = &sem;
+
    for( i = 0; i < NUM_THREADS; i++ ) {
+      params.i = i;
+
       cout << "main() : creating thread " << i << endl;
-      thread_error = pthread_create(&threads[i], NULL, PrintHello, (void *)i, (void*)&sem);
+      thread_error = pthread_create(&threads[i], NULL, PrintHello, (void *)&params);
 
       if (thread_error) {
          cout << "Error:unable to create thread," << thread_error << endl;
