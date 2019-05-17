@@ -4,8 +4,6 @@
 #define NUM_THREADS 5
 #define SEM_COUNT_INIT 1
 
-int x = 0;
-
 typedef struct params{
   long i;
   Semaphore* sem;
@@ -14,18 +12,22 @@ typedef struct params{
 void *PrintHello(void *params) {
    long tid;
    params_t *local_params;
+
    local_params = (params_t*)params;
 
    tid = (long)(local_params->i);
+
+   sem_mutex.down();
+
    printf("Hello World! Thread ID, %d\n", tid);
-   x++;
-   printf("x = %d\n", x);
 
 
    sleep(4);
 
 
    printf("GoodBye World! Thread ID, %d\n", tid);
+
+   sem_mutex.up();
 
    pthread_exit(NULL);
 }
