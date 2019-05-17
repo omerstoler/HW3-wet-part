@@ -25,20 +25,20 @@ void *PrintHello(void *params) {
 
 int main () {
    Semaphore sem(SEM_COUNT_INIT);
-   params_t params;
+   params_t params[NUM_THREADS];
 
    pthread_t threads[NUM_THREADS];
    int thread_error;
    int i;
    //Semaphore smp(1); // binary semaphore testing
 
-   params.sem = &sem;
 
    for( i = 0; i < NUM_THREADS; i++ ) {
-      params.i = i;
+      params[i].sem = &sem;
+      params[i].i = i;
 
       cout << "main() : creating thread " << i << endl;
-      thread_error = pthread_create(&threads[i], NULL, PrintHello, (void *)&params);
+      thread_error = pthread_create(&threads[i], NULL, PrintHello, (void *)&(params[i]));
 
       if (thread_error) {
          cout << "Error:unable to create thread," << thread_error << endl;
