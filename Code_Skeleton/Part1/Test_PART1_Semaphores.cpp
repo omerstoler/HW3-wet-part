@@ -20,6 +20,13 @@ void *PrintHello(void *params) {
    printf("Hello World! Thread ID, %d\n", tid);
    x++;
    printf("x = %d\n", x);
+
+
+   sleep(4);
+
+
+   printf("GoodBye World! Thread ID, %d\n", tid);
+
    pthread_exit(NULL);
 }
 

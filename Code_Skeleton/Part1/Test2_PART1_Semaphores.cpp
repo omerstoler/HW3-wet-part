@@ -6,7 +6,7 @@ Semaphore sem_mutex(1);
 void* thread(void* arg)
 {
     //wait
-    //===sem_mutex.down();
+    sem_mutex.down();
     printf("\nEntered..\n");
 
     //critical section
@@ -14,7 +14,7 @@ void* thread(void* arg)
 
     //signal
     printf("\nJust Exiting...\n");
-    //===sem_mutex.up();
+    sem_mutex.up();
 }
 
 
