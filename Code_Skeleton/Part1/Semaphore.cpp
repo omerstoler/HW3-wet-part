@@ -41,3 +41,11 @@ void Semaphore::down() // Block untill counter > 0, and mark - One thread has en
   count--;
   pthread_mutex_unlock(&m_lock);
 }
+/*********************************************************************
+// Destructs the Semaphore mutex & condVar
+*********************************************************************/
+Semaphore::~Semaphore()
+{
+  pthread_cond_destroy(&cond_var);
+  pthread_mutex_destroy(&m_lock);
+}
