@@ -9,8 +9,8 @@ class Cell {
 public:
 
 	Cell(bool state,int row, int col);
-	bool evolution(bool** curr_board, int board_rows, int board_cols);
-	bool get_state();
+	bool evolution(vector<vector<Cell>>& curr_board, int board_rows, int board_cols) const;
+	bool get_state() const;
 	void set_state(bool state);
 
 protected: // All members here are protected, instead of private for testing purposes
@@ -20,7 +20,7 @@ protected: // All members here are protected, instead of private for testing pur
 
 	bool is_alive;
 
-	int _get_neigh_alive_num(bool** curr_board, int board_rows, int board_cols);
+	int _get_neigh_alive_num(vector<vector<Cell>>& curr_board, int board_rows, int board_cols) const;
 
 };
 #endif
