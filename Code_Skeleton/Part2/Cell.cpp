@@ -29,7 +29,7 @@ bool Cell::get_state()
 /*********************************************************************
 * Comment
 *********************************************************************/
-int Cell::_get_neigh_alive_num(vector<vector<Cell>> curr_board,int board_rows, int board_cols)
+int Cell::_get_neigh_alive_num(vector<vector<Cell>> &curr_board,int board_rows, int board_cols)
 
 {
   int counter = 0;
@@ -55,7 +55,7 @@ int Cell::_get_neigh_alive_num(vector<vector<Cell>> curr_board,int board_rows, i
 /*********************************************************************
 * What happend with me in the next board?
 *********************************************************************/
-bool Cell::evolution(vector<vector<Cell>> curr_board,int board_rows, int board_cols)
+bool Cell::evolution(vector<vector<Cell>> &curr_board,int board_rows, int board_cols) const
 {
   int num_of_alive = _get_neigh_alive_num(curr_board, board_rows, board_cols);
 

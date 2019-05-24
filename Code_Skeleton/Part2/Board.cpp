@@ -4,7 +4,7 @@
 /*********************************************************************
 * Comment
 *********************************************************************/
-Board::Board(vector<vector<string>> initial_board, int board_rows, int board_cols)
+Board::Board(vector<vector<string>> &initial_board, int board_rows, int board_cols)
 {
   curr_board.reserve(board_rows); // alloc
   next_board.reserve(board_rows);
@@ -12,7 +12,7 @@ Board::Board(vector<vector<string>> initial_board, int board_rows, int board_col
   {
     for (int j = 0; j < board_cols; i++)
     {
-      bool init_state = (initial_board[i][j]=='1') ? true : false;
+      bool init_state = (initial_board[i][j]=="1") ? true : false;
       Cell c(init_state, i, j);
       curr_board[i].push_back(c);
       next_board[i].push_back(c);
@@ -22,14 +22,14 @@ Board::Board(vector<vector<string>> initial_board, int board_rows, int board_col
 /*********************************************************************
 * Comment
 *********************************************************************/
-int Board::get_board_rows()
+int Board::get_board_rows() const
 {
   return board_rows;
 }
 /*********************************************************************
 * Comment
 *********************************************************************/
-int Board::get_board_cols()
+int Board::get_board_cols() const
 {
   return board_cols;
 }
@@ -50,22 +50,24 @@ void Board::set_cell_next_state(bool state, int row, int col)
 /*********************************************************************
 * Comment
 *********************************************************************/
-bool Board::cell_curr_evolution(int row, int col)
+bool Board::cell_curr_evolution(int row, int col) const
 {
   return next_board[row][col].evolution(curr_board, row, col);
 }
 /*********************************************************************
 * Comment
 *********************************************************************/
-void Board::print_board()
+void Board::print_board() const
 {
-  cout << u8"╔" << string(u8"═") * board_cols << u8"╗" << endl;
-  for (uint i = 0; i < board_rows ++i) {
+  const size_t rows = board_rows;
+  const size_t cols = board_cols;
+  cout << u8"╔" << string(u8"═") * cols << u8"╗" << endl;
+  for (uint i = 0; i < rows; ++i) {
     cout << u8"║";
-    for (uint j = 0; j < board_cols; ++j) {
+    for (uint j = 0; j < cols; ++j) {
       cout << (curr_board[i][j].get_state() ? u8"█" : u8"░");
     }
     cout << u8"║" << endl;
   }
-  cout << u8"╚" << string(u8"═") * board_cols << u8"╝" << endl;
+  cout << u8"╚" << string(u8"═") * cols << u8"╝" << endl;
 }

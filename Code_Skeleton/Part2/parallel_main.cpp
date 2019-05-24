@@ -1,4 +1,4 @@
-#include "SerialGame.hpp"
+#include "Game.hpp"
 
 static inline game_params parse_input_args(int argc, char **argv);
 static inline void usage(const char* mes);
@@ -20,7 +20,7 @@ int main(int argc, char **argv) {
 --------------------------------------------------------------------------------*/
 static inline game_params parse_input_args(int argc, char **argv) {
 
-	if (argc != 6) // ./gameoflife filename.txt 100 20 Y Y
+	if (argc != 6) // ./gameoflife filename.txt 100 20 Y Y 
 		usage("Wrong number of arguments - expected 5");
 
 	game_params g;
@@ -28,10 +28,10 @@ static inline game_params parse_input_args(int argc, char **argv) {
 	g.n_gen = strtoul(argv[2], NULL, 10);
 	g.n_thread = strtoul(argv[3], NULL, 10);
 
-	string inter = string(argv[4]);
-	string print = string(argv[5]);
-	g.interactive_on = (inter == "y" || inter == "Y") ? true : false;
-	g.print_on = (print == "y" || print == "Y") ? true : false;
+	string inter = string(argv[4]); 
+	string print = string(argv[5]); 
+	g.interactive_on = (inter == "y" || inter == "Y") ? true : false; 
+	g.print_on = (print == "y" || print == "Y") ? true : false; 
 
 	if (g.n_gen <= 0 || g.n_thread <= 0)
 		usage("Invalid number of generations/number of threads (Required: integer >0)");
@@ -51,10 +51,10 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 	double total_time = (double)accumulate(gen_hist.begin(), gen_hist.end(), 0.0);
 	double avg_gen_time = total_time / gen_hist.size();
 
-	double avg_tile_time = 0;
+	double avg_tile_time = 0; 
 	for(uint i=0 ; i<tile_hist.size() ; ++i)
 		avg_tile_time += tile_hist[i].tile_compute_time;
-	avg_tile_time /= tile_hist.size();
+	avg_tile_time /= tile_hist.size();  
 	double gen_rate = gen_hist.size() / total_time;
 	double tile_rate = tile_hist.size() / total_time;
 
@@ -70,7 +70,7 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 	}
 
 	results_file << n_threads << "," << gen_hist.size() << "," << gen_rate << "," << avg_gen_time << "," << tile_rate
-		<< "," << avg_tile_time << "," << total_time << endl;
+		<< "," << avg_tile_time << "," << total_time << endl;  
 
 	results_file.close();
 }

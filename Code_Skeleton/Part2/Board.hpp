@@ -8,7 +8,7 @@
 class Board {
 public:
 
-	Board(vector<vector<string>>& initial_board,int board_rows, int board_cols);
+	Board(vector<vector<string>> &initial_board,int board_rows, int board_cols);
 	int get_board_rows() const;
 	int get_board_cols() const;
 	void swap_boards();
