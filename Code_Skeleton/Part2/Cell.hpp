@@ -1,4 +1,3 @@
-
 #ifndef __CELL_H
 #define __CELL_H
 #include "Headers.hpp"
