@@ -37,7 +37,7 @@ int Cell::_get_neigh_alive_num(vector<vector<Cell>> &curr_board,int board_rows, 
   {
     for (int j = -1; j <= 1; i++)
     {
-      if(i = 0 && j = 0)
+      if(i == 0 && j == 0)
       {
         continue;
       }
@@ -55,7 +55,7 @@ int Cell::_get_neigh_alive_num(vector<vector<Cell>> &curr_board,int board_rows, 
 /*********************************************************************
 * What happend with me in the next board?
 *********************************************************************/
-bool Cell::evolution(vector<vector<Cell>> &curr_board,int board_rows, int board_cols) const
+bool Cell::evolution(vector<vector<Cell>> &curr_board,int board_rows, int board_cols)
 {
   int num_of_alive = _get_neigh_alive_num(curr_board, board_rows, board_cols);
 
@@ -75,9 +75,4 @@ bool Cell::evolution(vector<vector<Cell>> &curr_board,int board_rows, int board_
 
     return false;
   }
-}
-
-void Cell::set_state(bool state)
-{
-  is_alive = state;
 }

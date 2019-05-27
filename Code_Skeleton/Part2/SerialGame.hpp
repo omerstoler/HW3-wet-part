@@ -1,8 +1,10 @@
 #ifndef __SERIALGAME_H
 #define __SERIALGAME_H
-#include "utils.hpp"
 #include "PCQueue.hpp"
 #include "Job.hpp"
+#include "utils.hpp"
+
+
 /*--------------------------------------------------------------------------------
 								  Auxiliary Structures
 --------------------------------------------------------------------------------*/
@@ -25,12 +27,12 @@ struct tile_record {
 class SerialGame {
 public:
 
-	SerialGame(game_params);
+	SerialGame(game_params gp);
 	~SerialGame();
 	void run(); // Runs the game
 	const vector<double> gen_hist() const; // Returns the generation timing histogram
 	const vector<tile_record> tile_hist() const; // Returns the tile timing histogram
-	//uint thread_num() const; //Returns the effective number of running threads = min(thread_num, field_height)
+	uint thread_num() const; //Returns the effective number of running threads = min(thread_num, field_height)
 
 
 protected: // All members here are protected, instead of private for testing purposes
@@ -42,7 +44,7 @@ protected: // All members here are protected, instead of private for testing pur
 	inline void print_board(const char* header);
 
 	uint m_gen_num; 			 		// The number of generations to run
-	//uint m_thread_num; 			 		// Effective number of threads = min(thread_num, field_height)
+	uint m_thread_num; 			 		// Effective number of threads = min(thread_num, field_height)
 	vector<tile_record> m_tile_hist; 	// Shared Timing history for tiles: First m_thread_num cells are the calculation durations for tiles in generation 1 and so on.
 							   	 		// Note: In your implementation, all m_thread_num threads must write to this structure.
 	vector<double> m_gen_hist;  	 	// Timing history for generations: x=m_gen_hist[t] iff generation t was calculated in x microseconds
@@ -51,7 +53,7 @@ protected: // All members here are protected, instead of private for testing pur
 	bool interactive_on; // Controls interactive mode - that means, prints the board as an animation instead of a simple dump to STDOUT
 	bool print_on; // Allows the printing of the board. Turn this off when you are checking performance (Dry 3, last question)
 
-	Board board;
+	Board* board;
 	PCQueue<Job> jobs;
 	// TODO: Add in your variables and synchronization primitives
 

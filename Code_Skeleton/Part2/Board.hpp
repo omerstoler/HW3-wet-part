@@ -1,6 +1,7 @@
 #ifndef __BOARD_H
 #define __BOARD_H
 #include "Cell.hpp"
+#include "utils.hpp"
 
 /*--------------------------------------------------------------------------------
 									Board Declaration
@@ -9,12 +10,12 @@ class Board {
 public:
 
 	Board(vector<vector<string>> &initial_board,int board_rows, int board_cols);
-	int get_board_rows() const;
-	int get_board_cols() const;
+	int get_board_rows();
+	int get_board_cols();
 	void swap_boards();
 	void set_cell_next_state(bool state, int row, int col);
-	bool cell_curr_evolution(int row, int col) const;
-	void print_board() const;
+	bool cell_curr_evolution(int row, int col);
+	void print_board();
 
 protected: // All members here are protected, instead of private for testing purposes
 

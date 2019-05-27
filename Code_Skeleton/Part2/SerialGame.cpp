@@ -9,14 +9,15 @@
 --------------------------------------------------------------------------------*/
 SerialGame::SerialGame(game_params gp)
 {
-	vector<string> file_lines = read_lines(gp.filename);
+	const string const_gp_filename = gp.filename;
+	vector<string> file_lines = utils::read_lines(const_gp_filename);
 	vector<vector<string>> string_mat_board;
 
 	int rows = file_lines.size();
 	int cols;
 
 	m_gen_num = gp.n_gen;
-	//m_thread_num = gp.n_thread;
+	m_thread_num = gp.n_thread;
 	//m_thread_num = 1; // ===== Serial version
 	interactive_on = gp.interactive_on;
   print_on = gp.print_on;
@@ -24,17 +25,21 @@ SerialGame::SerialGame(game_params gp)
 
 	for (int i = 0; i < rows; i++)
 	{
-		string_mat_board.push_back(split(file_lines[i], ' '));
+		string_mat_board.push_back(utils::split(file_lines[i], ' '));
 	}
 	cols = string_mat_board[0].size(); //==== IFF not empty
-	board = Board(string_mat_board, rows, cols);
-
+	Board b(string_mat_board, rows, cols);
+	board = &b;
+	Job::set_board(board);
 	// Create game fields - Consider using utils:read_file, utils::split
 	// Create & Start threads
 	// Testing of your implementation will presume all threads are started here
 }
 
-
+SerialGame::~SerialGame()
+{
+	//=====
+}
 
 /*--------------------------------------------------------------------------------
 
@@ -65,7 +70,7 @@ void SerialGame::_init_game()
 void SerialGame::_step(uint curr_gen)
 {
 	int lower = 0;
-	int upper = board.get_board_rows;
+	int upper = board->get_board_rows();
 	Job job(lower, upper); // ===== NOTE: before use of threads parallelism, we init job to be all board filling
   // divide to tiles
 	// for (int i = 0; i < m_thread_num; i++) {
@@ -90,6 +95,20 @@ void SerialGame::_destroy_game()
   //   }
 }
 
+uint SerialGame::thread_num() const
+{
+	return m_thread_num;
+}
+
+const vector<double> SerialGame::gen_hist() const
+{
+	return m_gen_hist;
+}
+
+const vector<tile_record> SerialGame::tile_hist() const
+{
+	return m_tile_hist;
+}
 /*--------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------*/
@@ -106,7 +125,7 @@ inline void SerialGame::print_board(const char* header) {
 			cout << "<------------" << header << "------------>" << endl;
 
 		//===================
-		board.print_board();
+		board->print_board();
 		//===================
 
 		// Display for GEN_SLEEP_USEC micro-seconds on screen

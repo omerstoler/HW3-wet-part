@@ -22,14 +22,14 @@ Board::Board(vector<vector<string>> &initial_board, int board_rows, int board_co
 /*********************************************************************
 * Comment
 *********************************************************************/
-int Board::get_board_rows() const
+int Board::get_board_rows()
 {
   return board_rows;
 }
 /*********************************************************************
 * Comment
 *********************************************************************/
-int Board::get_board_cols() const
+int Board::get_board_cols()
 {
   return board_cols;
 }
@@ -50,14 +50,14 @@ void Board::set_cell_next_state(bool state, int row, int col)
 /*********************************************************************
 * Comment
 *********************************************************************/
-bool Board::cell_curr_evolution(int row, int col) const
+bool Board::cell_curr_evolution(int row, int col)
 {
   return next_board[row][col].evolution(curr_board, row, col);
 }
 /*********************************************************************
 * Comment
 *********************************************************************/
-void Board::print_board() const
+void Board::print_board()
 {
   const size_t rows = board_rows;
   const size_t cols = board_cols;
