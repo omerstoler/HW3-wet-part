@@ -71,7 +71,7 @@ void Board::set_cell_next_state(bool state, int row, int col)
 *********************************************************************/
 bool Board::cell_curr_evolution(int row, int col)
 {
-  return (*curr_board)[row][col].evolution(*curr_board, row, col);
+  return (*curr_board)[row][col].evolution(*curr_board, rows, cols);
 }
 /*********************************************************************
 * Comment
