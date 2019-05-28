@@ -26,8 +26,8 @@ SerialGame::SerialGame(game_params gp)
 		string_mat_board.push_back(utils::split(file_lines[i], ' '));
 	}
 	cols = string_mat_board[0].size(); //==== IFF not empty
-	
-	
+
+
 	Board* b = new Board(string_mat_board, rows, cols);
 	board = b;
 	Job::set_board(board);
@@ -39,6 +39,7 @@ SerialGame::SerialGame(game_params gp)
 SerialGame::~SerialGame()
 {
 	//=====
+	delete board;
 }
 
 /*--------------------------------------------------------------------------------
@@ -69,15 +70,32 @@ void SerialGame::_init_game()
 
 void SerialGame::_step(uint curr_gen)
 {
-	int lower = 0;
-	int upper = board->get_board_rows();
-	Job job(upper, lower); // ===== NOTE: before use of threads parallelism, we init job to be all board filling
-  // divide to tiles
-	// for (int i = 0; i < m_thread_num; i++) {
-	// 	PCQueue does push_back(job)
-	//
-	// }
-	job.tile_evolution(); //===== NOTE: Will be moved to thread implementation
+	int lower=0;
+	int upper=0;
+	int board_rows = board->get_board_rows();
+	 // ===== NOTE: before use of threads parallelism, we init job to be all board filling
+	int job_rows, div, mod;
+
+	// divide to tiles
+	int tiles_num = (board_rows > m_thread_num) ? m_thread_num : board_rows;
+
+	for (int i = 0; i < tiles_num; i++) {
+		// PCQueue does push_back(job)
+		div = board_rows / tiles_num;
+		mod = board_rows % tiles_num;
+
+		job_rows = div;
+		if (i < mod)
+			job_rows += 1;
+		lower = upper;
+		upper += job_rows;
+		Job job(upper, lower);
+		job.tile_evolution();
+	}
+
+
+
+	 //===== NOTE: Will be moved to thread implementation
 	board->swap_boards();
 	// Push jobs to queue
 	// Wait for the workers to finish calculating
