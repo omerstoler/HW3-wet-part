@@ -12,7 +12,6 @@ SerialGame::SerialGame(game_params gp)
 	const string const_gp_filename = gp.filename;
 	vector<string> file_lines = utils::read_lines(const_gp_filename);
 	vector<vector<string>> string_mat_board;
-
 	int rows = file_lines.size();
 	int cols;
 
@@ -22,14 +21,15 @@ SerialGame::SerialGame(game_params gp)
 	interactive_on = gp.interactive_on;
   print_on = gp.print_on;
 
-
 	for (int i = 0; i < rows; i++)
 	{
 		string_mat_board.push_back(utils::split(file_lines[i], ' '));
 	}
 	cols = string_mat_board[0].size(); //==== IFF not empty
-	Board b(string_mat_board, rows, cols);
-	board = &b;
+	
+	
+	Board* b = new Board(string_mat_board, rows, cols);
+	board = b;
 	Job::set_board(board);
 	// Create game fields - Consider using utils:read_file, utils::split
 	// Create & Start threads
@@ -71,13 +71,14 @@ void SerialGame::_step(uint curr_gen)
 {
 	int lower = 0;
 	int upper = board->get_board_rows();
-	Job job(lower, upper); // ===== NOTE: before use of threads parallelism, we init job to be all board filling
+	Job job(upper, lower); // ===== NOTE: before use of threads parallelism, we init job to be all board filling
   // divide to tiles
 	// for (int i = 0; i < m_thread_num; i++) {
 	// 	PCQueue does push_back(job)
 	//
 	// }
 	job.tile_evolution(); //===== NOTE: Will be moved to thread implementation
+	board->swap_boards();
 	// Push jobs to queue
 	// Wait for the workers to finish calculating
 	// Swap pointers between current and next field

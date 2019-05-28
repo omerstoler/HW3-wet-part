@@ -1,6 +1,23 @@
 #include "Cell.hpp"
 
-
+/*********************************************************************
+* Comment
+*********************************************************************/
+Cell::Cell()
+{
+  is_alive = false;
+  coord_row = -1;
+  coord_col = -1;
+}
+/*********************************************************************
+* Comment
+*********************************************************************/
+Cell::Cell(const Cell& c)
+{
+  is_alive = c.is_alive;
+  coord_row = c.coord_row;
+  coord_col = c.coord_col;
+}
 /*********************************************************************
 * Comment
 *********************************************************************/
@@ -10,7 +27,15 @@ Cell::Cell(bool state, int row, int col)
   coord_row = row;
   coord_col = col;
 }
-
+/*********************************************************************
+* Comment
+*********************************************************************/
+Cell& Cell::operator=(const Cell& c)
+{
+  is_alive = c.is_alive;
+  coord_row = c.coord_row;
+  coord_col = c.coord_col;
+}
 /*********************************************************************
 * Comment
 *********************************************************************/
@@ -35,7 +60,7 @@ int Cell::_get_neigh_alive_num(vector<vector<Cell>> &curr_board,int board_rows, 
   int counter = 0;
   for (int i = -1; i <= 1; i++)
   {
-    for (int j = -1; j <= 1; i++)
+    for (int j = -1; j <= 1; j++)
     {
       if(i == 0 && j == 0)
       {
@@ -57,6 +82,7 @@ int Cell::_get_neigh_alive_num(vector<vector<Cell>> &curr_board,int board_rows, 
 *********************************************************************/
 bool Cell::evolution(vector<vector<Cell>> &curr_board,int board_rows, int board_cols)
 {
+
   int num_of_alive = _get_neigh_alive_num(curr_board, board_rows, board_cols);
 
   //=== I'm alive!
