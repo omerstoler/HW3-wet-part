@@ -24,14 +24,16 @@ JobThread::JobThread(uint thread_id, Game* game): Thread(thread_id)
 }
 void JobThread::thread_workload()
 {
+	Job* job;
 	while(true)
 	{
-		//job = Gameptr->jobs_pop();
-		//calc start time
-		//res = job->tile_evolution();
-		// calc end time
-		// if res < 0 : break;           // need to update -1 scenarios in tile_evolution
-		//Gameptr->count_increment(tile_compute_time);    // when game wakes-up need to set counter to 0 .
+		job = game_ptr->jobs_pop();
+		auto gen_start = std::chrono::system_clock::now(); //calc start time
+		res = job->tile_evolution();
+		auto gen_end = std::chrono::system_clock::now(); // calc end time
+		if (res < 0)
+			break;
+		game_ptr->count_increment(gen_end-gen_start);    // when game wakes-up need to set counter to 0 .
 	}
 }
 
