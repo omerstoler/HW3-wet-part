@@ -1,4 +1,4 @@
-#include "SerialGame.hpp"
+#include "Game.hpp"
 
 static inline game_params parse_input_args(int argc, char **argv);
 static inline void usage(const char* mes);
@@ -10,7 +10,7 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 int main(int argc, char **argv) {
 
 	game_params params = parse_input_args(argc, argv);
-	SerialGame g(params);
+	Game g(params);
 	g.run();
 	calc_and_append_statistics(g.thread_num(), g.gen_hist(), g.tile_hist());
 	return 0;
@@ -52,8 +52,10 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 	double avg_gen_time = total_time / gen_hist.size();
 
 	double avg_tile_time = 0;
-	for(uint i=0 ; i<tile_hist.size() ; ++i)
+	for(uint i=0 ; i<tile_hist.size() ; ++i){
+		cout <<"Tile time = "<< tile_hist[i].tile_compute_time << endl;
 		avg_tile_time += tile_hist[i].tile_compute_time;
+	}
 	avg_tile_time /= tile_hist.size();
 	double gen_rate = gen_hist.size() / total_time;
 	double tile_rate = tile_hist.size() / total_time;

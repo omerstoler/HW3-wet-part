@@ -19,7 +19,7 @@ public:
 		{
 			return true;
 		}
-		return false
+		return false;
 	}
 
 	// Will not return until the internal thread has exited.

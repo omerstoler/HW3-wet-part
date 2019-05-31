@@ -41,7 +41,7 @@ void Job::set_board(Board* game_board)
 /*********************************************************************
 * Comment
 *********************************************************************/
-void Job::set_lower_border(int upper, int lower)
+void Job::set_upper_lower(int upper, int lower)
 {
     upper_border=upper; // First row - valid row number
     lower_border=lower; // The row after the last - invalid row for this tile

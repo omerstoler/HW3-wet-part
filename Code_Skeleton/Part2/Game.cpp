@@ -1,7 +1,6 @@
 #include "Game.hpp"
 #include "JobThread.hpp"
 
-
 /*--------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------*/
@@ -26,7 +25,7 @@ Game::Game(game_params gp)
 	{
 		string_mat_board.push_back(utils::split(file_lines[i], ' '));
 	}
-	cols = string_mat_board[0].size(); //==== IFF not empty
+	cols = string_mat_board[0].size(); // IFF not empty
 
 
 	Board* b = new Board(string_mat_board, rows, cols);
@@ -37,7 +36,7 @@ Game::Game(game_params gp)
 
 Game::~Game()
 {
-	pthread_cond_destroy(&cond_var);
+	pthread_cond_destroy(&gen_done);
   pthread_mutex_destroy(&m_lock);
 	delete board;
 }
@@ -88,11 +87,9 @@ void Game::_init_game()
 		thread->start();
 		m_threadpool.push_back(thread);
 	}
-
-	// === Add initialization of jobs vector to avoid allocs
 }
 
-int Game::_calc_tiles_num()
+int Game::_calc_tiles_num() const
 {
 	int board_rows = board->get_board_rows();
 	int tiles_num = (board_rows > m_thread_num) ? m_thread_num : board_rows;
@@ -101,26 +98,19 @@ int Game::_calc_tiles_num()
 
 void Game::_step(uint curr_gen)
 {
-
-	tiles_done = 0; // ============= NOTE: risky in sync manner
-	for (int i = 0; i < tiles_num; i++) {
+	int tiles_num = _calc_tiles_num();
+	tiles_done = 0; // ============= NOTE: risky ?
+	for (int i = 0; i < tiles_num; i++)
+	{
 		jobs.push(jobs_vec[i]);
-		//====== add job to PCQueue - NOTE: sync problems might come upon insertion
-																						// job.tile_evolution(); - moves to consumer
 	}
-
-	/*=======================================================
-	cond: num of finished jobs != tiles_num
-	while(cond != true)
-		cond_wait(cond_var,m);
-	=======================================================*/
+	// sync
 	pthread_mutex_lock(&m_lock);
 	while(tiles_done < tiles_num)
-		cond_wait(&gen_done, &m_lock);
+		pthread_cond_wait(&gen_done, &m_lock);
 	pthread_mutex_unlock(&m_lock);
 
 	board->swap_boards();
-	 //===== NOTE: Will be moved to thread implementation
 
 	// Push jobs to queue
 	// Wait for the workers to finish calculating
@@ -141,7 +131,7 @@ void Game::_destroy_game()
   }
 	for (uint i = 0; i < tiles_num; ++i)
 	{
-      m_threadpool[j]->join();
+      m_threadpool[i]->join();
   }
 	uint size_vec = jobs_vec.size();
 	for (uint i = 0; i < size_vec; i++)
@@ -152,7 +142,8 @@ void Game::_destroy_game()
 
 uint Game::thread_num() const
 {
-	return _calc_tiles_num();
+	const uint t_num = _calc_tiles_num();
+	return t_num;
 }
 
 const vector<double> Game::gen_hist() const
@@ -193,19 +184,19 @@ inline void Game::print_board(const char* header) {
 /*--------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------*/
-Job* jobs_pop()
+Job* Game::jobs_pop()
 {
 	return jobs.pop();
 }
 /*--------------------------------------------------------------------------------
 							             tiles_done++, hist update
 --------------------------------------------------------------------------------*/
-void count_increment(std::chrono::time_point<std::chrono::system_clock> tile_compute_time)
+void Game::count_increment(auto tile_compute_time, uint id)
 {
 	pthread_mutex_lock(&m_lock);
 	tiles_done++;
-	//hist
-	m_gen_hist.push_back((double)std::chrono::duration_cast<std::chrono::microseconds>(tile_compute_time).count());
+	tile_record tr = {tile_compute_time,id};
+	m_tile_hist.push_back(tr);
 	pthread_cond_signal(&gen_done);
 	pthread_mutex_unlock(&m_lock);
 }

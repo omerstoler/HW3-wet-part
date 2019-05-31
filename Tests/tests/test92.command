@@ -1,0 +1,1 @@
+./GameOfLife ./tests/test92.matrix 21 152 N Y
