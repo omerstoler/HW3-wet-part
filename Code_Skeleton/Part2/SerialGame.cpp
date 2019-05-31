@@ -68,6 +68,13 @@ void SerialGame::_init_game()
 	// Testing of your implementation will presume all threads are started here
 }
 
+int SerialGame::_calc_tiles_num()
+{
+	int board_rows = board->get_board_rows();
+	int tiles_num = (board_rows > m_thread_num) ? m_thread_num : board_rows;
+	return tiles_num;
+}
+
 void SerialGame::_step(uint curr_gen)
 {
 	int lower=0;
@@ -77,7 +84,7 @@ void SerialGame::_step(uint curr_gen)
 	int job_rows, div, mod;
 
 	// divide to tiles
-	int tiles_num = (board_rows > m_thread_num) ? m_thread_num : board_rows;
+	int tiles_num = _calc_tiles_num();
 
 	for (int i = 0; i < tiles_num; i++) {
 		// PCQueue does push_back(job)
@@ -90,10 +97,14 @@ void SerialGame::_step(uint curr_gen)
 		lower = upper;
 		upper += job_rows;
 		Job job(upper, lower);
-		job.tile_evolution();
+		//====== add job to PCQueue - NOTE: sync problems might come upon insertion
+																						// job.tile_evolution(); - moves to consumer
 	}
-
-
+	/*=======================================================
+	cond: num of finished jobs != tiles_num
+	while(cond != true)
+		cond_wait(cond_var,m);
+	=======================================================*/
 
 	 //===== NOTE: Will be moved to thread implementation
 	board->swap_boards();
@@ -128,6 +139,7 @@ const vector<tile_record> SerialGame::tile_hist() const
 {
 	return m_tile_hist;
 }
+
 /*--------------------------------------------------------------------------------
 
 --------------------------------------------------------------------------------*/
