@@ -53,7 +53,7 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 
 	double avg_tile_time = 0;
 	for(uint i=0 ; i<tile_hist.size() ; ++i){
-		cout <<"Tile time = "<< tile_hist[i].tile_compute_time << endl;
+		//cout <<"Tile time = "<< tile_hist[i].tile_compute_time << endl;
 		avg_tile_time += tile_hist[i].tile_compute_time;
 	}
 	avg_tile_time /= tile_hist.size();
