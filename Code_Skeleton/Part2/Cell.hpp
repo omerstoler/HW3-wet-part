@@ -13,7 +13,7 @@ public:
 	bool evolution(vector<vector<Cell>> &curr_board, int board_rows, int board_cols);
 	bool get_state();
 	void set_state(bool state);
-	Cell& operator=(const Cell& c);
+	// Cell& operator=(const Cell& c);
 protected: // All members here are protected, instead of private for testing purposes
 
 	int coord_row; //=== coordinate

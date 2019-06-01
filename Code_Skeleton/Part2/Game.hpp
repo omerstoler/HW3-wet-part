@@ -37,7 +37,7 @@ public:
 
 	//====================================
 	Job* jobs_pop();
-	void count_increment(auto tile_compute_time,uint id);
+	void count_increment(double tile_compute_time,uint id);
 	//====================================
 
 protected: // All members here are protected, instead of private for testing purposes

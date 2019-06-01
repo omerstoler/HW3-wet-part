@@ -30,12 +30,12 @@ Cell::Cell(bool state, int row, int col)
 /*********************************************************************
 * Comment
 *********************************************************************/
-Cell& Cell::operator=(const Cell& c)
-{
-  is_alive = c.is_alive;
-  coord_row = c.coord_row;
-  coord_col = c.coord_col;
-}
+// Cell& Cell::operator=(const Cell& c)
+// {
+//   is_alive = c.is_alive;
+//   coord_row = c.coord_row;
+//   coord_col = c.coord_col;
+// }
 /*********************************************************************
 * Comment
 *********************************************************************/
@@ -64,7 +64,7 @@ int Cell::_get_neigh_alive_num(vector<vector<Cell>> &curr_board,int board_rows, 
     {
       if(i == 0 && j == 0)
       {
-        
+
       }
       else if(i + coord_row >= 0 && i + coord_row < board_rows && j + coord_col >= 0 && j + coord_col < board_cols)
       {

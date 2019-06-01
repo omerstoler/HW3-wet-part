@@ -91,7 +91,7 @@ void Game::_init_game()
 
 int Game::_calc_tiles_num() const
 {
-	int board_rows = board->get_board_rows();
+	uint board_rows = board->get_board_rows();
 	int tiles_num = (board_rows > m_thread_num) ? m_thread_num : board_rows;
 	return tiles_num;
 }
@@ -123,7 +123,7 @@ void Game::_destroy_game()
 	// Destroys board and frees all threads and resources
 	// Not implemented in the Game's destructor for testing purposes.
 	// All threads must be joined here
-	int tiles_num = _calc_tiles_num();
+	uint tiles_num = _calc_tiles_num();
 	for (uint i = 0; i < tiles_num; ++i)
 	{
 			jobs_vec[i]->set_upper_lower(-1,-1);
@@ -191,11 +191,11 @@ Job* Game::jobs_pop()
 /*--------------------------------------------------------------------------------
 							             tiles_done++, hist update
 --------------------------------------------------------------------------------*/
-void Game::count_increment(auto tile_compute_time, uint id)
+void Game::count_increment(double tile_compute_time, uint id)
 {
 	pthread_mutex_lock(&m_lock);
 	tiles_done++;
-	tile_record tr = {tile_compute_time,id};
+	tile_record tr = {tile_compute_time, id};
 	m_tile_hist.push_back(tr);
 	pthread_cond_signal(&gen_done);
 	pthread_mutex_unlock(&m_lock);
