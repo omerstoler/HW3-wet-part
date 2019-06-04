@@ -1,5 +1,5 @@
 #include "Game.hpp"
-
+#define TILE_IDS_FILE_NAME "tiles_ids.csv"
 static inline game_params parse_input_args(int argc, char **argv);
 static inline void usage(const char* mes);
 static void calc_and_append_statistics(uint n_threads, const vector<double>& gen_hist, const vector<tile_record>& tile_hist);
@@ -12,7 +12,7 @@ int main(int argc, char **argv) {
 	game_params params = parse_input_args(argc, argv);
 	Game g(params);
 	g.run();
-	calc_and_append_statistics(g.thread_num(), g.gen_hist(), g.tile_hist());
+	calc_and_append_statistics(g.thread_num(), g.gen_hist(), g.tile_hist(),params.n_thread);
 	return 0;
 }
 /*--------------------------------------------------------------------------------
@@ -46,7 +46,7 @@ static inline void usage(const char* mes) {
 }
 
 
-static void calc_and_append_statistics(uint n_threads, const vector<double>& gen_hist, const vector<tile_record>& tile_hist) {
+static void calc_and_append_statistics(uint n_threads, const vector<double>& gen_hist, const vector<tile_record>& tile_hist,uint init_n_threads) {
 
 	double total_time = (double)accumulate(gen_hist.begin(), gen_hist.end(), 0.0);
 	double avg_gen_time = total_time / gen_hist.size();
@@ -71,8 +71,27 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 		// cout << "Successfully created results file: " << DEF_RESULTS_FILE_NAME << endl;
 	}
 
+	results_file.close();
+
+
 	results_file << n_threads << "," << gen_hist.size() << "," << gen_rate << "," << avg_gen_time << "," << tile_rate
 		<< "," << avg_tile_time << "," << total_time << endl;
 
-	results_file.close();
+		ifstream ifile2(strcat(TILE_IDS_FILE_NAME,to_string(init_n_threads)));
+		bool file_exists2 = ifile2.good();
+		ifile2.close();
+
+		std::ofstream results_file2(strcat(TILE_IDS_FILE_NAME,to_string(init_n_threads)),std::ofstream::out);
+		if (!file_exists2)
+		{
+			results_file2 << "Index,ThreadID" << endl;
+			// cout << "Successfully created results file: " << DEF_RESULTS_FILE_NAME << endl;
+		}
+		for (int j = 0; j < tile_hist.size(); j++)
+		{
+			results_file2 << j << "," << tile_hist[j].thread_id << endl;
+		}
+
+
+		results_file2.close();
 }
