@@ -72,11 +72,11 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 		// cout << "Successfully created results file: " << DEF_RESULTS_FILE_NAME << endl;
 	}
 
+	results_file << n_threads << "," << gen_hist.size() << "," << gen_rate << "," << avg_gen_time << "," << tile_rate
+			<< "," << avg_tile_time << "," << total_time << endl;
 	results_file.close();
 
 
-	results_file << n_threads << "," << gen_hist.size() << "," << gen_rate << "," << avg_gen_time << "," << tile_rate
-		<< "," << avg_tile_time << "," << total_time << endl;
 
 		ifstream ifile2(TILE_IDS_FILE_NAME+params.filename+std::to_string(params.n_thread)+".csv");
 		bool file_exists2 = ifile2.good();
