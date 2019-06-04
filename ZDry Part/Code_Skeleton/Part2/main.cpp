@@ -61,11 +61,11 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 	double gen_rate = gen_hist.size() / total_time;
 	double tile_rate = tile_hist.size() / total_time;
 
-	ifstream ifile(DEF_RESULTS_FILE_NAME);
+	ifstream ifile(params.filename+DEF_RESULTS_FILE_NAME);
 	bool file_exists = ifile.good();
 	ifile.close();
 
-	std::ofstream results_file(DEF_RESULTS_FILE_NAME, std::ofstream::app | std::ofstream::out);
+	std::ofstream results_file(params.filename+DEF_RESULTS_FILE_NAME, std::ofstream::app | std::ofstream::out);
 	if (!file_exists)
 	{
 		results_file << "EffectiveThreadNum,GenNum,Gen_Rate[1/us],Avg_Gen_Time[us],Tile_Rate[1/us],Avg_Tile_Time[us],Total_Time[us]" << endl;
