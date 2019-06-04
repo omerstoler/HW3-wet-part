@@ -3,7 +3,7 @@
 #define TILE_IDS_FILE_NAME "tiles_ids"
 static inline game_params parse_input_args(int argc, char **argv);
 static inline void usage(const char* mes);
-static void calc_and_append_statistics(uint n_threads, const vector<double>& gen_hist, const vector<tile_record>& tile_hist,uint init_n_threads);
+static void calc_and_append_statistics(uint n_threads, const vector<double>& gen_hist, const vector<tile_record>& tile_hist,game_params params);
 
 /*--------------------------------------------------------------------------------
 										Main
@@ -47,7 +47,7 @@ static inline void usage(const char* mes) {
 }
 
 
-static void calc_and_append_statistics(uint n_threads, const vector<double>& gen_hist, const vector<tile_record>& tile_hist,uint init_n_threads) {
+static void calc_and_append_statistics(uint n_threads, const vector<double>& gen_hist, const vector<tile_record>& tile_hist,game_params params) {
 
 	double total_time = (double)accumulate(gen_hist.begin(), gen_hist.end(), 0.0);
 	double avg_gen_time = total_time / gen_hist.size();
@@ -78,11 +78,11 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 	results_file << n_threads << "," << gen_hist.size() << "," << gen_rate << "," << avg_gen_time << "," << tile_rate
 		<< "," << avg_tile_time << "," << total_time << endl;
 
-		ifstream ifile2(TILE_IDS_FILE_NAME+std::to_string(init_n_threads)+".csv");
+		ifstream ifile2(TILE_IDS_FILE_NAME+params.filename+std::to_string(init_n_threads)+".csv");
 		bool file_exists2 = ifile2.good();
 		ifile2.close();
 
-		std::ofstream results_file2(TILE_IDS_FILE_NAME+std::to_string(init_n_threads)+".csv",std::ofstream::out);
+		std::ofstream results_file2(TILE_IDS_FILE_NAME+params.filename+std::to_string(params.n_thread)+".csv",std::ofstream::out);
 		if (!file_exists2)
 		{
 			results_file2 << "Index,ThreadID" << endl;
