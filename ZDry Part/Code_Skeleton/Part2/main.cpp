@@ -13,7 +13,7 @@ int main(int argc, char **argv) {
 	game_params params = parse_input_args(argc, argv);
 	Game g(params);
 	g.run();
-	calc_and_append_statistics(g.thread_num(), g.gen_hist(), g.tile_hist(),params.n_thread);
+	calc_and_append_statistics(g.thread_num(), g.gen_hist(), g.tile_hist(),params);
 	return 0;
 }
 /*--------------------------------------------------------------------------------
@@ -78,7 +78,7 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 	results_file << n_threads << "," << gen_hist.size() << "," << gen_rate << "," << avg_gen_time << "," << tile_rate
 		<< "," << avg_tile_time << "," << total_time << endl;
 
-		ifstream ifile2(TILE_IDS_FILE_NAME+params.filename+std::to_string(init_n_threads)+".csv");
+		ifstream ifile2(TILE_IDS_FILE_NAME+params.filename+std::to_string(params.n_thread)+".csv");
 		bool file_exists2 = ifile2.good();
 		ifile2.close();
 
