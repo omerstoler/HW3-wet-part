@@ -77,7 +77,7 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 	results_file << n_threads << "," << gen_hist.size() << "," << gen_rate << "," << avg_gen_time << "," << tile_rate
 		<< "," << avg_tile_time << "," << total_time << endl;
 
-		ifstream ifile2(strcat(TILE_IDS_FILE_NAME,std::to_string(init_n_threads)));
+		ifstream ifile2(std::strcat(TILE_IDS_FILE_NAME,std::to_string(init_n_threads)));
 		bool file_exists2 = ifile2.good();
 		ifile2.close();
 
