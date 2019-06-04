@@ -1,4 +1,5 @@
 #include "Game.hpp"
+#include <string.h>
 #define TILE_IDS_FILE_NAME "tiles_ids.csv"
 static inline game_params parse_input_args(int argc, char **argv);
 static inline void usage(const char* mes);
