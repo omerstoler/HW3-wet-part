@@ -35,12 +35,12 @@ void JobThread::thread_workload()
 		res = job->tile_evolution();
 		auto gen_end = std::chrono::system_clock::now(); // calc end time
 		auto duration  = (double)std::chrono::duration_cast<std::chrono::microseconds>(gen_end-gen_start).count();
-		auto tile_start = (double)std::chrono::duration_cast<std::chrono::microseconds>(gen_start).count();
-		auto tile_finish = (double)std::chrono::duration_cast<std::chrono::microseconds>(gen_end).count();
+		//auto tile_start = std::chrono::time_point_cast<std::chrono::microseconds>(gen_start);
+		//auto tile_finish = std::chrono::time_point_cast<std::chrono::microseconds>(gen_end);
 		//cout << "Time is :" << duration << endl;
 		if (res < 0)
 			break;
-		game_ptr->count_increment(duration, m_thread_id,tile_start,tile_finish);    // when game wakes-up need to set counter to 0 .
+		game_ptr->count_increment(duration, m_thread_id,gen_start,gen_end,job->job_id());    // when game wakes-up need to set counter to 0 .
 	}
 }
 

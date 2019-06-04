@@ -9,6 +9,7 @@ Game::Game(game_params gp)
 	pthread_cond_init(&gen_done, NULL);
   pthread_mutex_init(&m_lock, NULL);
 	m_curr_gen_num = 0;
+	init_time = std::chrono::system_clock::now();
 	const string const_gp_filename = gp.filename;
 	vector<string> file_lines = utils::read_lines(const_gp_filename);
 	vector<vector<string>> string_mat_board;
@@ -73,7 +74,12 @@ void Game::_init_game()
 	div = board_rows / tiles_num;
 	mod = board_rows % tiles_num;
 	//=======================================
-	m_tile_hist.reserve(tiles_num*m_gen_num);
+	tile_record t= {0,0,0,0};
+	for (uint i = 0; i < tiles_num*m_gen_num; i++)
+	{
+		m_tile_hist.push_back(t);
+	}
+	init_time = std::chrono::system_clock::now();
 	//=======================================
 	for (int i = 0; i < tiles_num; i++)
 	{
@@ -83,7 +89,7 @@ void Game::_init_game()
 		lower = upper;
 		upper += job_rows;
 		//===== Job init
-		Job* job = new Job(upper, lower); //==== TODO: To update instead of allocating everytime
+		Job* job = new Job(upper, lower,i); //==== TODO: To update instead of allocating everytime
 		jobs_vec.push_back(job);
 		//===== Thread init
 		JobThread* thread = new JobThread(i,this);
@@ -194,13 +200,18 @@ Job* Game::jobs_pop()
 /*--------------------------------------------------------------------------------
 							             tiles_done++, hist update
 --------------------------------------------------------------------------------*/
-void Game::count_increment(double tile_compute_time, uint id,double tile_start, double tile_finish)
+void Game::count_increment(double tile_compute_time, uint id,std::chrono::time_point<std::chrono::system_clock> tile_start, std::chrono::time_point<std::chrono::system_clock> tile_finish,int job_id)
 {
 	pthread_mutex_lock(&m_lock);
 	tiles_done++;
 	pthread_cond_signal(&gen_done);
 	pthread_mutex_unlock(&m_lock);
-	
-	tile_record tr = {tile_compute_time, id,tile_start,tile_finish};
-	m_tile_hist[m_curr_gen_num * thread_num() + id] = tr;
+	auto tile_start_duration  = (double)std::chrono::duration_cast<std::chrono::microseconds>(tile_start-init_time).count();
+	auto tile_finish_duration  = (double)std::chrono::duration_cast<std::chrono::microseconds>(tile_finish-init_time).count();
+	//cout << tile_compute_time << "," << tile_start_duration << ","  <<  tile_finish_duration << endl;
+
+	m_tile_hist[m_curr_gen_num * thread_num() + job_id].tile_compute_time = tile_compute_time;
+	m_tile_hist[m_curr_gen_num * thread_num() + job_id].thread_id = id;
+	m_tile_hist[m_curr_gen_num * thread_num() + job_id].tile_start = tile_start_duration;
+	m_tile_hist[m_curr_gen_num * thread_num() + job_id].tile_finish = tile_finish_duration;
 }

@@ -90,7 +90,8 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 		}
 		for (uint j = 0; j < tile_hist.size(); j++)
 		{
-			results_file2 << j << "," << tile_hist[j].thread_start << "," << tile_hist[j].thread_finish << endl;
+			//cout << j << "," << tile_hist[j].tile_start << "," << tile_hist[j].tile_finish << endl;
+			results_file2 << j << "," << tile_hist[j].tile_start << "," << tile_hist[j].tile_finish << endl;
 		}
 
 

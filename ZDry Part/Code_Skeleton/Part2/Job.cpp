@@ -5,10 +5,11 @@ Board* Job::board=NULL;
 /*********************************************************************
 * Comment
 *********************************************************************/
-Job::Job(int upper, int lower)
+Job::Job(int upper, int lower, int job_id)
 {
   upper_border=upper; // First row - valid row number
   lower_border=lower; // The row after the last - invalid row for this tile
+  m_job_id = job_id;
 }
 /*********************************************************************
 * Comment
@@ -46,3 +47,7 @@ void Job::set_upper_lower(int upper, int lower)
     upper_border=upper; // First row - valid row number
     lower_border=lower; // The row after the last - invalid row for this tile
 }
+ int Job::job_id()
+ {
+   return m_job_id;
+ }

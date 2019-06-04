@@ -40,7 +40,7 @@ public:
 
 	//====================================
 	Job* jobs_pop();
-	void count_increment(double tile_compute_time,uint id,double tile_start, double tile_finish);
+	void count_increment(double tile_compute_time,uint id,std::chrono::time_point<std::chrono::system_clock> tile_start, std::chrono::time_point<std::chrono::system_clock> tile_finish,int job_id);
 	//====================================
 
 protected: // All members here are protected, instead of private for testing purposes
@@ -55,6 +55,7 @@ protected: // All members here are protected, instead of private for testing pur
 
 	uint m_gen_num; 			 		// The number of generations to run
 	uint m_curr_gen_num;
+	std::chrono::time_point<std::chrono::system_clock> init_time;
 	uint m_thread_num; 			 		// Effective number of threads = min(thread_num, field_height)
 	vector<tile_record> m_tile_hist; 	// Shared Timing history for tiles: First m_thread_num cells are the calculation durations for tiles in generation 1 and so on.
 							   	 		// Note: In your implementation, all m_thread_num threads must write to this structure.
