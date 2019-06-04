@@ -2,7 +2,7 @@
 #define TILE_IDS_FILE_NAME "tiles_ids.csv"
 static inline game_params parse_input_args(int argc, char **argv);
 static inline void usage(const char* mes);
-static void calc_and_append_statistics(uint n_threads, const vector<double>& gen_hist, const vector<tile_record>& tile_hist);
+static void calc_and_append_statistics(uint n_threads, const vector<double>& gen_hist, const vector<tile_record>& tile_hist,uint init_n_threads);
 
 /*--------------------------------------------------------------------------------
 										Main
@@ -77,17 +77,17 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 	results_file << n_threads << "," << gen_hist.size() << "," << gen_rate << "," << avg_gen_time << "," << tile_rate
 		<< "," << avg_tile_time << "," << total_time << endl;
 
-		ifstream ifile2(strcat(TILE_IDS_FILE_NAME,to_string(init_n_threads)));
+		ifstream ifile2(strcat(TILE_IDS_FILE_NAME,std::to_string(init_n_threads)));
 		bool file_exists2 = ifile2.good();
 		ifile2.close();
 
-		std::ofstream results_file2(strcat(TILE_IDS_FILE_NAME,to_string(init_n_threads)),std::ofstream::out);
+		std::ofstream results_file2(std::strcat(TILE_IDS_FILE_NAME,std::to_string(init_n_threads)),std::ofstream::out);
 		if (!file_exists2)
 		{
 			results_file2 << "Index,ThreadID" << endl;
 			// cout << "Successfully created results file: " << DEF_RESULTS_FILE_NAME << endl;
 		}
-		for (int j = 0; j < tile_hist.size(); j++)
+		for (uint j = 0; j < tile_hist.size(); j++)
 		{
 			results_file2 << j << "," << tile_hist[j].thread_id << endl;
 		}
