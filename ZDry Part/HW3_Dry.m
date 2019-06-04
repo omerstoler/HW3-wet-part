@@ -33,3 +33,4 @@ xlabel("N");
 ylabel("$\frac{Latency(A)}{Latency(A_0)}$",'Interpreter','latex','FontSize',20);
 ylim([-0.1 1.1]);
 saveas(Q3F2,'Q3F2.png');
+%% Part 3.2

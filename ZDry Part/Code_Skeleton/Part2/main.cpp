@@ -85,12 +85,12 @@ static void calc_and_append_statistics(uint n_threads, const vector<double>& gen
 		std::ofstream results_file2(TILE_IDS_FILE_NAME+params.filename+std::to_string(params.n_thread)+".csv",std::ofstream::out);
 		if (!file_exists2)
 		{
-			results_file2 << "Index,ThreadID" << endl;
+			results_file2 << "Index,StartingTime,FinishingTime" << endl;
 			// cout << "Successfully created results file: " << DEF_RESULTS_FILE_NAME << endl;
 		}
 		for (uint j = 0; j < tile_hist.size(); j++)
 		{
-			results_file2 << j << "," << tile_hist[j].thread_id << endl;
+			results_file2 << j << "," << tile_hist[j].thread_start << "," << tile_hist[j].thread_finish << endl;
 		}
 
 

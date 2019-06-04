@@ -8,7 +8,7 @@ Game::Game(game_params gp)
 {
 	pthread_cond_init(&gen_done, NULL);
   pthread_mutex_init(&m_lock, NULL);
-
+	m_curr_gen_num = 0;
 	const string const_gp_filename = gp.filename;
 	vector<string> file_lines = utils::read_lines(const_gp_filename);
 	vector<vector<string>> string_mat_board;
@@ -48,6 +48,7 @@ void Game::run()
 	_init_game(); // Starts the threads and all other variables you need
 	print_board("Initial Board");
 	for (uint i = 0; i < m_gen_num; ++i) {
+		m_curr_gen_num = i;
 		auto gen_start = std::chrono::system_clock::now();
 		_step(i); // Iterates a single generation
 		auto gen_end = std::chrono::system_clock::now();
@@ -71,7 +72,9 @@ void Game::_init_game()
 	int tiles_num = _calc_tiles_num();
 	div = board_rows / tiles_num;
 	mod = board_rows % tiles_num;
-
+	//=======================================
+	m_tile_hist.reserve(tiles_num*m_gen_num);
+	//=======================================
 	for (int i = 0; i < tiles_num; i++)
 	{
 		job_rows = div;
@@ -191,12 +194,13 @@ Job* Game::jobs_pop()
 /*--------------------------------------------------------------------------------
 							             tiles_done++, hist update
 --------------------------------------------------------------------------------*/
-void Game::count_increment(double tile_compute_time, uint id)
+void Game::count_increment(double tile_compute_time, uint id,double tile_start, double tile_finish)
 {
 	pthread_mutex_lock(&m_lock);
 	tiles_done++;
-	tile_record tr = {tile_compute_time, id};
-	m_tile_hist.push_back(tr);
 	pthread_cond_signal(&gen_done);
 	pthread_mutex_unlock(&m_lock);
+	
+	tile_record tr = {tile_compute_time, id,tile_start,tile_finish};
+	m_tile_hist[m_curr_gen_num * thread_num() + id] = tr;
 }
