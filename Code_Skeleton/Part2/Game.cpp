@@ -129,11 +129,18 @@ void Game::_destroy_game()
 			jobs_vec[i]->set_upper_lower(-1,-1);
 			jobs.push(jobs_vec[i]);
   }
+	// joins
 	for (uint i = 0; i < tiles_num; ++i)
 	{
       m_threadpool[i]->join();
   }
+	// delete threads
+	for (uint i = 0; i < tiles_num; ++i)
+	{
+      delete m_threadpool[i];
+  }
 	uint size_vec = jobs_vec.size();
+	// delete jobs
 	for (uint i = 0; i < size_vec; i++)
 	{
 		delete jobs_vec[i];
