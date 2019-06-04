@@ -1,0 +1,1 @@
+./GameOfLife ./tests/test24.matrix 11 63 N Y

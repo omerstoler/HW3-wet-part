@@ -1,0 +1,1 @@
+./GameOfLife ./tests/test42.matrix 11 49 N Y

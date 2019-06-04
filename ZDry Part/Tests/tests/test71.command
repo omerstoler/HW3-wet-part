@@ -1,0 +1,1 @@
+./GameOfLife ./tests/test71.matrix 25 47 N Y

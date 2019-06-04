@@ -1,0 +1,1 @@
+./GameOfLife ./tests/test120.matrix 30 80 N Y
