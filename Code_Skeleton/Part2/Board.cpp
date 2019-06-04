@@ -7,8 +7,8 @@
 Board::Board(vector<vector<string>> &initial_board, int board_rows, int board_cols)
 {
   bool init_state;
-  rows = board_rows;	
-  cols = board_cols;	
+  rows = board_rows;
+  cols = board_cols;
   curr_board = new vector<vector<Cell>>;
   *curr_board = vector<vector<Cell>>(board_rows, vector<Cell>(board_cols));
   next_board = new vector<vector<Cell>>;
@@ -21,7 +21,7 @@ Board::Board(vector<vector<string>> &initial_board, int board_rows, int board_co
       init_state = (initial_board[i][j][0]=='1') ? true : false;
       Cell c(init_state, i, j);
       (*curr_board)[i][j] = c;
-      (*next_board)[i][j] = c;      
+      (*next_board)[i][j] = c;
     }
   }
 
